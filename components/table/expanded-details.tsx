@@ -7,13 +7,14 @@ type ExpandedDetailsProps = {
 export const ExpandedDetails = ({
   book,
 }: ExpandedDetailsProps) => {
-  const randomCover = `https://picsum.photos/seed/${book.id}/200/300`;
+  const placeholderText = `${book.title}\n \n \n \n \n \n \n \n \n \n${book.authors[0]}`;
+  const placeholderCover =  `https://placehold.co/200x300?text=${encodeURIComponent(placeholderText)}`;
 
   return (
     <div className="flex gap-4 p-4 border-t">
       <div>
         <img
-          src={randomCover}
+          src={placeholderCover}
           alt={`${book.title} cover`}
           className="rounded-md shadow-md"
         />
