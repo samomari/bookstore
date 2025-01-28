@@ -26,8 +26,10 @@ const generateBook = (id: number): Book => ({
 })
 
 export async function GET(req: NextRequest) {
-  const count = 20;
-  const books = Array.from({ length: count }, (_, i) => generateBook(i + 1));
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get('page') || '1');
+  const limit = 20;
+  const books = Array.from({ length: limit }, (_, i) => generateBook((page - 1) * limit + i + 1));
 
   return new Response(JSON.stringify(books));
 }
