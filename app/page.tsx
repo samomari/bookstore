@@ -13,7 +13,6 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
   const tableRef = useRef<HTMLDivElement>(null);
 
-  // Function to fetch books with pagination
   const fetchBooks = async (page: number) => {
     setLoading(true);
     try {
@@ -35,16 +34,13 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // Initial fetch
     fetchBooks(page);
   }, [page]);
 
-  // Infinite scroll logic
   useEffect(() => {
     const handleScroll = () => {
       if (tableRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
-        // If we're at the bottom of the scrollable area, load more data
         if (scrollHeight - scrollTop === clientHeight && hasMore && !loading) {
           setPage((prevPage) => prevPage + 1);
         }
@@ -65,7 +61,7 @@ export default function Home() {
         {loading && page === 1 ? (
           <p>Loading...</p>
         ) : (
-          <div ref={tableRef} style={{ height: '840px', overflowY: 'auto' }}>
+          <div ref={tableRef} className="h-[840px] overflow-auto">
             <DataTable columns={columns} data={data} />
           </div>
         )}
