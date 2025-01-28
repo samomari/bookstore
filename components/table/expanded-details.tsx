@@ -7,7 +7,7 @@ type ExpandedDetailsProps = {
 export const ExpandedDetails = ({
   book,
 }: ExpandedDetailsProps) => {
-  const placeholderText = `${book.title}\n \n \n \n \n \n \n \n \n \n${book.authors[0]}`;
+  const placeholderText = `${book.title}\n \n \n \n \n \n \n \n \n \n${book.author[0]}`;
   const placeholderCover =  `https://placehold.co/200x300?text=${encodeURIComponent(placeholderText)}`;
 
   return (
@@ -23,7 +23,7 @@ export const ExpandedDetails = ({
         <h2 className="text-lg font-semibold">{book.title}</h2>
         <p className="text-sm text-gray-600">ISBN: {book.isbn}</p>
         <p className="text-sm text-gray-600">Publisher: {book.publisher}</p>
-        <p className="text-sm text-gray-600">Authors: {book.authors.join(", ")}</p>
+        <p className="text-sm text-gray-600">Authors: {book.author.join(", ")}</p>
         
         {book.details! && (
           <div className="mt-2">

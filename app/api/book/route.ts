@@ -14,9 +14,9 @@ const generateISBN = (): string => {
 const generateBook = (id: number): Book => ({
   id: id.toString(),
   isbn: generateISBN(),
-  title: faker.person.fullName(),
-  authors: [faker.person.firstName(), faker.person.lastName()],
-  publisher: faker.company.name(),
+  title: faker.book.title(),
+  author: [faker.person.firstName() + ' ' + faker.person.lastName()],
+  publisher: faker.company.name() + ', ' +faker.date.between({ from: '2000-01-01', to: Date.now() }).getFullYear(),
   details: {
     likes: faker.number.int({ min: 0, max: 1000 }),
     reviews: faker.number.int({ min: 0, max: 1000 }),

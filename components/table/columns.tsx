@@ -30,8 +30,8 @@ export const columns: ColumnDef<Book>[] = [
     header: "Title",
   },
   {
-    accessorKey: "authors",
-    header: "Author(s)",
+    accessorKey: "author",
+    header: "Author",
   },
   {
     accessorKey: "publisher",
