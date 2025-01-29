@@ -21,7 +21,7 @@ type ToolbarProps = {
   page: number;
   likes: number;
   reviews: number;
-  data: any[];
+  data: Book[];
   onLangChange: (lang: string) => void;
   onSeedChange: (seed: number) => void;
   onLikesChange: (likes: number) => void;
