@@ -4,11 +4,9 @@ type ExpandedDetailsProps = {
   book: Book;
 };
 
-export const ExpandedDetails = ({
-  book,
-}: ExpandedDetailsProps) => {
+export const ExpandedDetails = ({ book }: ExpandedDetailsProps) => {
   const placeholderText = `${book.title}\n \n \n \n \n \n \n \n \n \n${book.author[0]}`;
-  const placeholderCover =  `https://placehold.co/200x300?text=${encodeURIComponent(placeholderText)}`;
+  const placeholderCover = `https://placehold.co/200x300?text=${encodeURIComponent(placeholderText)}`;
 
   return (
     <div className="flex gap-4 p-4 border-t">
@@ -23,8 +21,10 @@ export const ExpandedDetails = ({
         <h2 className="text-lg font-semibold">{book.title}</h2>
         <p className="text-sm text-gray-600">ISBN: {book.isbn}</p>
         <p className="text-sm text-gray-600">Publisher: {book.publisher}</p>
-        <p className="text-sm text-gray-600">Authors: {book.author.join(", ")}</p>
-        
+        <p className="text-sm text-gray-600">
+          Authors: {book.author.join(", ")}
+        </p>
+
         {book.details! && (
           <div className="mt-2">
             <p className="text-sm">

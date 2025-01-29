@@ -12,6 +12,8 @@ import { Shuffle } from "lucide-react";
 import seedrandom from "seedrandom";
 import { Slider } from "../ui/slider";
 import { CSVLink } from "react-csv";
+import { Book } from "@/types";
+import { Label } from "../ui/label";
 
 type ToolbarProps = {
   lang: string;
@@ -49,28 +51,31 @@ export default function Toolbar({
     reviews: reviews,
   });
 
-  const [isClient, setIsClient] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const handleInputChange = (name: keyof typeof inputValues) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setInputValues(prev => ({
-      ...prev,
-      [name]: e.target.value,
-    }));
-  };
+  const handleInputChange =
+    (name: keyof typeof inputValues) =>
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLInputElement
+      >,
+    ) => {
+      setInputValues((prev) => ({
+        ...prev,
+        [name]: e.target.value,
+      }));
+    };
 
-  const handleSliderChange = (name: keyof typeof inputValues) => (
-    newValue: number[]
-  ) => {
-    setInputValues(prev => ({
-      ...prev,
-      [name]: newValue[0],
-    }));
-  };
+  const handleSliderChange =
+    (name: keyof typeof inputValues) => (newValue: number[]) => {
+      setInputValues((prev) => ({
+        ...prev,
+        [name]: newValue[0],
+      }));
+    };
 
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
   }, []);
 
   useEffect(() => {
@@ -84,7 +89,7 @@ export default function Toolbar({
   }, [inputValues, onSeedChange, onLikesChange, onReviewsChange]);
 
   const formatDataForCSV = (data: Book[]) => {
-    return data.map(item => ({
+    return data.map((item) => ({
       id: item.id,
       isbn: item.isbn,
       title: item.title,
@@ -98,60 +103,81 @@ export default function Toolbar({
   };
 
   return (
-    <div className="flex items-center rounded-t-md justify-between rounded-top shadow-sm pb-2 h-[48px]">
-      <div className="flex space-x-4">
-        <Select value={lang} onValueChange={onLangChange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Language" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="en">English</SelectItem>
-            <SelectItem value="ru">Russian</SelectItem>
-            <SelectItem value="de">German</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="flex items-center h-[36px] rounded-md border shadow-sm px-2">
-          <Input
-            type="number"
-            value={inputValues.seed}
-            onChange={handleInputChange("seed")}
-            className="w-auto h-[24px] border-none text-center cursor-pointer focus-visible:ring-0 shadow-none"
-          />
-          <Button variant="ghost" onClick={() => setInputValues(prev => ({ ...prev, seed: generateSeed() }))}>
-            <Shuffle />
-          </Button>
+    <div className="flex items-center rounded-t-md justify-center rounded-top shadow-sm pb-2 h-[48px]">
+      <div className="flex space-x-14">
+        <div className="flex flex-col items-center justify-center">
+          <Label className="mb-1 text-muted-foreground">Language</Label>
+          <Select value={lang} onValueChange={onLangChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="ru">Russian</SelectItem>
+              <SelectItem value="de">German</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <Slider
-          min={0}
-          max={5}
-          step={0.1}
-          value={[inputValues.likes]}
-          onValueChange={handleSliderChange("likes")}
-          className="w-[200px]"
-        />
-        <div className="flex items-center h-[36px] rounded-md px-2">
-          <Input
-            type="number"
-            min={0}
-            max={10}
-            step={0.1}
-            value={inputValues.reviews}
-            onChange={handleInputChange("reviews")}
-            className="w-[80px]"
-            placeholder="Reviews"
-          />
-        </div>
-        {isClient && (
-          <Button variant="outline">
-            <CSVLink
-              data={formatDataForCSV(data)}
-              filename={`books-${seed}.csv`}
-              className="text-primary"
+        <div className="flex flex-col items-center justify-center">
+          <Label className="mb-1 text-muted-foreground">Seed</Label>
+          <div className="flex items-center h-[36px] rounded-md border shadow-sm px-2">
+            <Input
+              type="number"
+              value={inputValues.seed}
+              onChange={handleInputChange("seed")}
+              className="w-auto h-[24px] border-none text-center cursor-pointer focus-visible:ring-0 shadow-none"
+            />
+            <Button
+              variant="ghost"
+              onClick={() =>
+                setInputValues((prev) => ({ ...prev, seed: generateSeed() }))
+              }
             >
-              Export CSV
-            </CSVLink>
-          </Button>
-        )}
+              <Shuffle />
+            </Button>
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <Label className="pb-4 text-muted-foreground">
+            Likes: <strong>{likes}</strong>
+          </Label>
+          <Slider
+            min={0}
+            max={5}
+            step={0.1}
+            value={[inputValues.likes]}
+            onValueChange={handleSliderChange("likes")}
+            className="w-[200px] pb-4"
+          />
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <Label className="mb-1 text-muted-foreground">Reviews</Label>
+          <div className="flex items-center h-[36px] rounded-md px-2">
+            <Input
+              type="number"
+              min={0}
+              max={10}
+              step={0.1}
+              value={inputValues.reviews}
+              onChange={handleInputChange("reviews")}
+              className="w-[80px]"
+              placeholder="Reviews"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          {mounted && (
+            <Button variant="outline">
+              <CSVLink
+                data={formatDataForCSV(data)}
+                filename={`books-${seed}.csv`}
+                className="text-primary"
+              >
+                Export CSV
+              </CSVLink>
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

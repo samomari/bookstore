@@ -4,9 +4,9 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getExpandedRowModel
+  getExpandedRowModel,
 } from "@tanstack/react-table";
- 
+
 import {
   Table,
   TableBody,
@@ -21,9 +21,9 @@ import { ExpandedDetails } from "./expanded-details";
 import { Book } from "@/types";
 
 interface DataTableProps<TData extends Book, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-};
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+}
 
 export function DataTable<TData extends Book, TValue>({
   columns,
@@ -39,12 +39,12 @@ export function DataTable<TData extends Book, TValue>({
     getRowCanExpand: (row) => !!row.original,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-  })
+  });
 
   return (
     <div className="border">
       <Table>
-      <TableHeader>
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -54,10 +54,10 @@ export function DataTable<TData extends Book, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
@@ -66,12 +66,12 @@ export function DataTable<TData extends Book, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <React.Fragment key={row.id}>
-                <TableRow data-state={row.getIsSelected() && 'selected'}>
+                <TableRow data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

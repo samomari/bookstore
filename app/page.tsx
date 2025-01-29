@@ -13,15 +13,25 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [lang, setLang] = useState("en");
-  const [seed, setSeed] = useState(Math.floor(Math.random() * 90000000 + 10000000));
+  const [seed, setSeed] = useState(
+    Math.floor(Math.random() * 90000000 + 10000000),
+  );
   const [likes, setLikes] = useState(2.5);
   const [reviews, setReviews] = useState(2.5);
   const tableRef = useRef<HTMLDivElement>(null);
 
-  const fetchBooks = async (page: number, lang: string, seed: number, likes: number, reviews: number) => {
+  const fetchBooks = async (
+    page: number,
+    lang: string,
+    seed: number,
+    likes: number,
+    reviews: number,
+  ) => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/book?page=${page}&lang=${lang}&seed=${seed}&likes=${likes}&reviews=${reviews}`);
+      const response = await fetch(
+        `/api/book?page=${page}&lang=${lang}&seed=${seed}&likes=${likes}&reviews=${reviews}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch books data");
       }
@@ -42,13 +52,13 @@ export default function Home() {
     if (page > 1) {
       fetchBooks(page, lang, seed, likes, reviews);
     }
-  }, [page, lang, seed, likes, reviews]);
+  }, [page]);
 
   useEffect(() => {
-    setData([]);
-    setPage(1); 
-    fetchBooks(1, lang, seed, likes, reviews); 
-  }, [lang, seed, likes, reviews]); 
+    setData(() => []);
+    setPage(() => 1);
+    fetchBooks(1, lang, seed, likes, reviews);
+  }, [lang, seed, likes, reviews]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,29 +81,23 @@ export default function Home() {
   return (
     <div className="w-full h-full flex justify-center">
       <Card className="lg:w-8/12 w-full shadow-md p-3">
-        {loading && page === 1 ? (
-          <p>Loading...</p>
-        ) : (
-         <div>
-          <Toolbar 
-            lang={lang} 
+        <div>
+          <Toolbar
+            lang={lang}
             seed={seed}
             likes={likes}
             reviews={reviews}
-            onSeedChange={setSeed} 
-            onLangChange={setLang} 
+            onSeedChange={setSeed}
+            onLangChange={setLang}
             onLikesChange={setLikes}
             onReviewsChange={setReviews}
             page={page}
-            data={data}/>
+            data={data}
+          />
           <div ref={tableRef} className="h-[840px] overflow-auto">
-             
             <DataTable columns={columns} data={data} />
           </div>
-          </div>
-        )}
-        {loading && page > 1 && <p>Loading more...</p>}
-        {!hasMore && <p>No more books to load.</p>}
+        </div>
       </Card>
     </div>
   );
