@@ -61,6 +61,7 @@ export async function GET(req: NextRequest) {
   const limit = page === 1 ? 20 : 10;
 
   const fakerLocale = locales[lang as keyof typeof locales] || fakerEN;
+  fakerLocale.seed(parseInt(seed, 10));
 
   const books = Array.from({ length: limit }, (_, i) =>
     generateBook((page - 1) * limit + i + 1, fakerLocale, likes, reviews, seed)

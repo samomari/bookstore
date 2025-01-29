@@ -2,7 +2,7 @@ export type Book = {
   id: string;
   isbn: string;
   title: string;
-  author: string[];
+  author: string;
   publisher: string;
   details?: {
     likes: number;

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -6,11 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect } from "react";
 import { Input } from "../ui/input";
 import { Shuffle } from "lucide-react";
 import seedrandom from "seedrandom";
 import { Slider } from "../ui/slider";
+import { CSVLink } from "react-csv";
 
 type ToolbarProps = {
   lang: string;
@@ -18,6 +19,7 @@ type ToolbarProps = {
   page: number;
   likes: number;
   reviews: number;
+  data: any[];
   onLangChange: (lang: string) => void;
   onSeedChange: (seed: number) => void;
   onLikesChange: (likes: number) => void;
@@ -30,13 +32,14 @@ export default function Toolbar({
   page,
   likes,
   reviews,
+  data,
   onLangChange,
   onSeedChange,
   onLikesChange,
   onReviewsChange,
 }: ToolbarProps) {
   const generateSeed = () => {
-    const rng = seedrandom(`${seed}-${page}-${likes}-${reviews}`);
+    const rng = seedrandom(`${seed}-${page}`);
     return Math.floor(rng() * 90000000 + 10000000);
   };
 
@@ -45,6 +48,8 @@ export default function Toolbar({
     likes: likes,
     reviews: reviews,
   });
+
+  const [isClient, setIsClient] = useState(false);
 
   const handleInputChange = (name: keyof typeof inputValues) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLInputElement>
@@ -65,6 +70,10 @@ export default function Toolbar({
   };
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
     const timeout = setTimeout(() => {
       onSeedChange(inputValues.seed);
       onLikesChange(inputValues.likes);
@@ -74,8 +83,22 @@ export default function Toolbar({
     return () => clearTimeout(timeout);
   }, [inputValues, onSeedChange, onLikesChange, onReviewsChange]);
 
+  const formatDataForCSV = (data: Book[]) => {
+    return data.map(item => ({
+      id: item.id,
+      isbn: item.isbn,
+      title: item.title,
+      author: item.author,
+      publisher: item.publisher,
+      likes: item.details?.likes,
+      reviews: item.details?.reviews,
+      reviewsList: item.details?.reviewsList?.join(", "),
+      reviewsAuthorList: item.details?.reviewsAuthorList?.join(", "),
+    }));
+  };
+
   return (
-    <div className="flex items-center rounded-t-md justify-between bg-secondary rounded-top shadow-sm border h-[48px]">
+    <div className="flex items-center rounded-t-md justify-between rounded-top shadow-sm pb-2 h-[48px]">
       <div className="flex space-x-4">
         <Select value={lang} onValueChange={onLangChange}>
           <SelectTrigger className="w-[180px]">
@@ -118,6 +141,17 @@ export default function Toolbar({
             placeholder="Reviews"
           />
         </div>
+        {isClient && (
+          <Button variant="outline">
+            <CSVLink
+              data={formatDataForCSV(data)}
+              filename={`books-${seed}.csv`}
+              className="text-primary"
+            >
+              Export CSV
+            </CSVLink>
+          </Button>
+        )}
       </div>
     </div>
   );

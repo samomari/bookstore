@@ -13,7 +13,7 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [lang, setLang] = useState("en");
-  const [seed, setSeed] = useState(Date.now());
+  const [seed, setSeed] = useState(Math.floor(Math.random() * 90000000 + 10000000));
   const [likes, setLikes] = useState(2.5);
   const [reviews, setReviews] = useState(2.5);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -70,7 +70,7 @@ export default function Home() {
 
   return (
     <div className="w-full h-full flex justify-center">
-      <Card className="lg:w-8/12 w-full shadow-md p-2">
+      <Card className="lg:w-8/12 w-full shadow-md p-3">
         {loading && page === 1 ? (
           <p>Loading...</p>
         ) : (
@@ -84,7 +84,8 @@ export default function Home() {
             onLangChange={setLang} 
             onLikesChange={setLikes}
             onReviewsChange={setReviews}
-            page={page}/>
+            page={page}
+            data={data}/>
           <div ref={tableRef} className="h-[840px] overflow-auto">
              
             <DataTable columns={columns} data={data} />
